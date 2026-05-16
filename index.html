@@ -250,20 +250,32 @@
             box-shadow: 0px 4px 10px rgba(0,0,0,0.2); 
             transition: opacity 0.5s; 
             opacity: 1;">
-     🎵 씨노브가 궁금하다면 클릭 클릭
+     🎵 씨노브를 찬양하라!
   </a>
 
+</script>
+
   <script>
-      // 페이지 로드 후 3초(3000ms) 뒤 버튼을 부드럽게 숨깁니다.
-      setTimeout(function() {
-          const btn = document.getElementById('loading-exit-btn');
-          if (btn) {
-              btn.style.opacity = '0'; // 0.5초 동안 서서히 투명해짐
-              setTimeout(function() {
-                  btn.style.display = 'none'; // 화면 레이아웃에서 완전히 제거
-              }, 500); 
+      (function() {
+          function unfreezeSafariAudio() {
+              // 1. 렌파이 엔진 기본 Web Audio 컨텍스트 강제 깨우기
+              if (typeof Module !== 'undefined' && Module.audioContext) {
+                  if (Module.audioContext.state === 'suspended') {
+                      Module.audioContext.resume();
+                  }
+              }
+              // 2. OpenAL 웹 컨텍스트가 존재할 경우 함께 깨우기
+              if (typeof AL !== 'undefined' && AL.currentContext && AL.currentContext.ctx) {
+                  if (AL.currentContext.ctx.state === 'suspended') {
+                      AL.currentContext.ctx.resume();
+                  }
+              }
           }
-      }, 2500);
+
+          // 유저가 대사를 읽으려고 화면을 클릭하거나 터치할 때마다 사파리 자물쇠를 실시간으로 계속 분쇄합니다.
+          window.addEventListener('click', unfreezeSafariAudio, true);
+          window.addEventListener('touchend', unfreezeSafariAudio, true);
+      })();
   </script>
 </body>
 
