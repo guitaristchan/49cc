@@ -15,7 +15,6 @@
   <link rel="icon" href="icons/icon-192x192.png" sizes="192x192" type="image/png" />
   <link rel="icon" href="icons/icon-384x384.png" sizes="384x384" type="image/png" />
   <link rel="icon" href="icons/icon-512x512.png" sizes="512x512" type="image/png" />
-  <!-- ios support -->
   <link rel="apple-touch-icon" href="icons/icon-72x72.png" sizes="72x72" type="image/png" />
   <link rel="apple-touch-icon" href="icons/icon-96x96.png" sizes="96x96" type="image/png" />
   <link rel="apple-touch-icon" href="icons/icon-128x128.png" sizes="128x128" type="image/png" />
@@ -79,7 +78,7 @@
       border-radius: 0 0 5px 5px;
     }
 
-    /* [수정] 원래 뜨는 시끄러운 영어 문구들을 숨깁니다 */
+    /* 원래 뜨는 시끄러운 영어 문구들을 숨깁니다 */
     #statusTextDiv {
       overflow: auto;
       max-height: 40vh;
@@ -87,17 +86,17 @@
       text-align: center;
     }
 
-    /* [추가] 가려진 영어 대신 우리가 원하는 보라색 문구를 고정으로 띄웁니다 */
+    /* 가려진 영어 대신 우리가 원하는 보라색 문구를 고정으로 띄웁니다 */
     #statusTextDiv::after {
       content: "당신의 작고 귀여운 바이올린 씨노브가 준비중‎(՞៸៸›⩊‹៸៸՞)🩷"; 
       font-size: 16px !important; 
-      color: #FFF2F4 !important; /* 대사창과 맞춘 보라색 */
+      color: #FFF2F4 !important; 
       font-weight: bold;
       display: block;
-      margin-bottom: 10px; /* 파란색 바와의 간격 */
+      margin-bottom: 10px; 
     }
 
-    /* [수정] 파란색 로딩 바를 숨기지 않고 정상적으로 보여줍니다 */
+    /* 파란색 로딩 바를 숨기지 않고 정상적으로 보여줍니다 */
     #statusProgress {
       display: block !important; 
       width: 100%;
@@ -189,11 +188,36 @@
         object-fit: contain;
     }
   </style>
-
 </head>
 
 <body>
-<a href="https://guitaristchan.github.io/-B-/" 
+  <canvas id="canvas" oncontextmenu="event.preventDefault()"></canvas>
+
+  <div id="statusDiv" class="visible">
+    <div id="statusTextDiv"></div>
+    <progress id="statusProgress" value="0" max="100"></progress>
+  </div>
+
+  <div id="inputDiv" class="hidden">
+    <form id="inputForm">
+      <div id="inputPrompt"></div>
+      <input id="inputText" type="text">
+    </form>
+  </div>
+
+  <script>
+      window.gameZipURL = 'game.zip';
+
+      if (navigator.serviceWorker) {
+          if (!navigator.serviceWorker.controller) {
+              navigator.serviceWorker.register('./service-worker.js', { updateViaCache: 'all' });
+          }
+      }
+  </script>
+  <script src="renpy-pre.js"></script>
+  <script async type="text/javascript" src="renpy.js"></script>
+
+  <a href="https://guitaristchan.github.io/-B-/" 
      id="loading-exit-btn"
      style="position: fixed; 
             bottom: 15%; 
@@ -203,29 +227,4 @@
             padding: 12px 24px; 
             background-color: #ffffff; 
             color: #000000; 
-            border: 2px solid #ffb6c1; 
-            border-radius: 30px; 
-            text-decoration: none; 
-            font-weight: bold; 
-            font-size: 16px; 
-            box-shadow: 0px 4px 10px rgba(0,0,0,0.2); 
-            transition: opacity 0.5s; /* 부드럽게 사라지게 만드는 효과 */
-            opacity: 1;">
-     🎵 씨노브가 궁금하다면 클릭 클릭 ლ(´ڡ`ლ)
-  </a>
-
-  <script>
-      // 게임 접속 후 딱 3초(3000ms) 뒤에 버튼을 사라지게 만듭니다.
-      setTimeout(function() {
-          const btn = document.getElementById('loading-exit-btn');
-          if (btn) {
-              btn.style.opacity = '0'; // 서서히 투명해짐
-              setTimeout(function() {
-                  btn.style.display = 'none'; // 0.5초 뒤 완전히 숨김
-              }, 500); 
-          }
-      }, 3000); // 3000 = 3초 (2초로 줄이고 싶다면 2000으로 변경 가능!)
-  </script>
-</body>
-
-</html>
+            border: 2px solid #ffb6c1
