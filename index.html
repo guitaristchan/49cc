@@ -90,10 +90,10 @@
     #statusTextDiv::after {
       content: "당신의 작고 귀여운 바이올린 씨노브가 준비중‎(՞៸៸›⩊‹៸៸՞)🩷"; 
       font-size: 16px !important; 
-      color: #FFF2F4 !important; /* 대사창과 맞춘 보라색 */
+      color: #FFF2F4 !important; 
       font-weight: bold;
       display: block;
-      margin-bottom: 10px; /* 파란색 바와의 간격 */
+      margin-bottom: 10px; 
     }
 
     /* 파란색 로딩 바를 숨기지 않고 정상적으로 보여줍니다 */
@@ -250,21 +250,38 @@
             box-shadow: 0px 4px 10px rgba(0,0,0,0.2); 
             transition: opacity 0.5s; 
             opacity: 1;">
-     🎵 씨노브가 궁금하면?
+     🎵 씨노브가 궁금하다면 클릭 클릭 ლ(´ڡ`ლ)
   </a>
-
-</script>
 
   <script>
       (function() {
-          function unfreezeSafariAudio() {
-              // 1. 렌파이 엔진 기본 Web Audio 컨텍스트 강제 깨우기
+          const btn = document.getElementById('loading-exit-btn');
+
+          // 버튼을 안전하게 페이드아웃 후 삭제하는 공통 함수
+          function vanishButton() {
+              if (btn && btn.style.display !== 'none') {
+                  btn.style.opacity = '0';
+                  setTimeout(function() {
+                      btn.style.display = 'none';
+                  }, 500);
+              }
+          }
+
+          // 1. 조건 없이 게임 접속 3초 뒤에 무조건 버튼 자동 삭제
+          setTimeout(vanishButton, 3000);
+
+          // 2. 사파리 오디오 깨우기 함수
+          function unfreezeSafariAudio(e) {
+              // 화면 어디든 터치하거나 클릭하면 홍보 버튼도 그 즉시 강제 삭제
+              if (btn && e.target !== btn) {
+                  vanishButton();
+              }
+
               if (typeof Module !== 'undefined' && Module.audioContext) {
                   if (Module.audioContext.state === 'suspended') {
                       Module.audioContext.resume();
                   }
               }
-              // 2. OpenAL 웹 컨텍스트가 존재할 경우 함께 깨우기
               if (typeof AL !== 'undefined' && AL.currentContext && AL.currentContext.ctx) {
                   if (AL.currentContext.ctx.state === 'suspended') {
                       AL.currentContext.ctx.resume();
@@ -272,7 +289,7 @@
               }
           }
 
-          // 유저가 대사를 읽으려고 화면을 클릭하거나 터치할 때마다 사파리 자물쇠를 실시간으로 계속 분쇄합니다.
+          // 유저가 대사를 넘기려고 화면을 클릭/터치할 때마다 작동
           window.addEventListener('click', unfreezeSafariAudio, true);
           window.addEventListener('touchend', unfreezeSafariAudio, true);
       })();
