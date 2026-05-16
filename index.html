@@ -78,7 +78,7 @@
       border-radius: 0 0 5px 5px;
     }
 
-    /* 원래 뜨는 시끄러운 영어 문구들을 숨깁니다 */
+    /* 원래 뜨는 로딩 창의 영어 문구들을 숨기고 가운데로 정렬합니다 */
     #statusTextDiv {
       overflow: auto;
       max-height: 40vh;
@@ -86,7 +86,7 @@
       text-align: center;
     }
 
-    /* 가려진 영어 대신 우리가 원하는 보라색 문구를 고정으로 띄웁니다 */
+    /* 가려진 영어 대신 커스텀 보라색 멘트를 띄웁니다 */
     #statusTextDiv::after {
       content: "당신의 작고 귀여운 바이올린 씨노브가 준비중‎(՞៸៸›⩊‹៸៸՞)🩷"; 
       font-size: 16px !important; 
@@ -96,7 +96,7 @@
       margin-bottom: 10px; 
     }
 
-    /* 파란색 로딩 바를 숨기지 않고 정상적으로 보여줍니다 */
+    /* 파란색 로딩 바가 정상적으로 보이도록 활성화합니다 */
     #statusProgress {
       display: block !important; 
       width: 100%;
@@ -191,9 +191,26 @@
 </head>
 
 <body>
-  <canvas id="canvas" oncontextmenu="event.preventDefault()"></canvas>
+  <canvas id="canvas" oncontextmenu="event.preventDefault()" tabindex=-1></canvas>
+  <div id="overlayDiv"></div>
 
-  <div id="statusDiv" class="visible">
+  <img id="presplash" src="web-presplash.jpg">
+
+  <div id="ContextContainer">
+    <a id="ContextButton">&#8801;</a><br />
+    <div id="ContextMenu" style="display: none;">
+      <input id="ID_SavegamesImport" type="file" onchange="onSavegamesImport(this)" accept="application/zip"
+        style=display:none></input>
+      <a href="javascript:document.getElementById('ID_SavegamesImport').click();">Import Saves</a>
+      <a href="javascript:onSavegamesExport();">Export Saves</a>
+      <a href="javascript:FSDownload('/log.txt', 'text/plain');">Download Log</a>
+      <a href="https://www.renpy.org/" target="_blank">
+          Powered by Ren'Py
+      </a>
+    </div>
+  </div>
+
+  <div id="statusDiv" class="hidden">
     <div id="statusTextDiv"></div>
     <progress id="statusProgress" value="0" max="100"></progress>
   </div>
@@ -227,4 +244,29 @@
             padding: 12px 24px; 
             background-color: #ffffff; 
             color: #000000; 
-            border: 2px solid #ffb6c1
+            border: 2px solid #ffb6c1; 
+            border-radius: 30px; 
+            text-decoration: none; 
+            font-weight: bold; 
+            font-size: 16px; 
+            box-shadow: 0px 4px 10px rgba(0,0,0,0.2); 
+            transition: opacity 0.5s; 
+            opacity: 1;">
+     🎵 씨노브가 궁금하다면 클릭 클릭 ლ(´ڡ`ლ)
+  </a>
+
+  <script>
+      // 유저 접속 후 정각 3초(3000ms) 뒤 버튼을 스르륵 투명하게 만듭니다.
+      setTimeout(function() {
+          const btn = document.getElementById('loading-exit-btn');
+          if (btn) {
+              btn.style.opacity = '0'; 
+              setTimeout(function() {
+                  btn.style.display = 'none'; // 완전히 공간 배제
+              }, 500); 
+          }
+      }, 3000); 
+  </script>
+</body>
+
+</html>
