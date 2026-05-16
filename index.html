@@ -193,28 +193,7 @@
 </head>
 
 <body>
-  <canvas id="canvas" oncontextmenu="event.preventDefault()" tabindex=-1></canvas>
-  <div id="overlayDiv"></div>
-
-  <img id="presplash" src="web-presplash.jpg">
-
-  <div id="ContextContainer">
-    <a id="ContextButton">&#8801;</a><br />
-    <div id="ContextMenu" style="display: none;">
-      <input id="ID_SavegamesImport" type="file" onchange="onSavegamesImport(this)" accept="application/zip" style="display:none"></input>
-      <a href="javascript:document.getElementById('ID_SavegamesImport').click();">Import Saves</a>
-      <a href="javascript:onSavegamesExport();">Export Saves</a>
-      <a href="javascript:FSDownload('/log.txt', 'text/plain');">Download Log</a>
-      <a href="https://www.renpy.org/" target="_blank">Powered by Ren'Py</a>
-    </div>
-  </div>
-
-  <div id="statusDiv">
-    <div id="statusTextDiv"></div>
-    <progress id="statusProgress" value="0" max="100"></progress>
-  </div>
-
-  <div id="inputDiv" class="hidden">
+<div id="inputDiv" class="hidden">
     <form id="inputForm">
       <div id="inputPrompt"></div>
       <input id="inputText" type="text">
@@ -232,24 +211,51 @@
   </script>
   <script src="renpy-pre.js"></script>
   <script async type="text/javascript" src="renpy.js"></script>
-  <a href="https://guitaristchan.github.io/-B-/" 
-   style="position: fixed; 
-          bottom: 15%; 
-          left: 50%; 
-          transform: translateX(-50%); 
-          z-index: 99999; 
-          padding: 12px 24px; 
-          background-color: #ffffff; 
-          color: #000000; 
-          border: 2px solid #ffb6c1; 
-          border-radius: 30px; 
-          text-decoration: none; 
-          font-weight: bold; 
-          font-size: 16px; 
-          box-shadow: 0px 4px 10px rgba(0,0,0,0.2); 
-          transition: 0.2s;">
-   🎵 나만의 씨노브가 궁금하다면?
-</a>
+
+  <a href="https://이동하고싶은사이트주소.com" 
+     id="loading-exit-btn"
+     style="position: fixed; 
+            bottom: 15%; 
+            left: 50%; 
+            transform: translateX(-50%); 
+            z-index: 99999; 
+            padding: 12px 24px; 
+            background-color: #ffffff; 
+            color: #000000; 
+            border: 2px solid #ffb6c1; 
+            border-radius: 30px; 
+            text-decoration: none; 
+            font-weight: bold; 
+            font-size: 16px; 
+            box-shadow: 0px 4px 10px rgba(0,0,0,0.2); 
+            transition: 0.2s;">
+     🎵 다른 사이트로 이동하기 (Click to visit)
+  </a>
+
+  <script>
+      (function() {
+          const btn = document.getElementById('loading-exit-btn');
+          if (!btn) return;
+
+          // 1. 로딩이 끝나고 유저가 게임을 시작하려고 화면을 터치(클릭)하는 순간 버튼 삭제
+          document.addEventListener('click', function(e) {
+              if (e.target !== btn) {
+                  btn.style.display = 'none';
+              }
+          }, true);
+
+          // 2. 렌파이 자체 로딩 화면(loading 또는 presplash)이 사라지면 버튼도 자동으로 삭제
+          const observer = new MutationObserver(() => {
+              const loadingScreen = document.getElementById('loading') || document.getElementById('presplash');
+              if (loadingScreen && (loadingScreen.style.display === 'none' || loadingScreen.classList.contains('hidden'))) {
+                  btn.style.display = 'none';
+                  observer.disconnect();
+              }
+          });
+
+          observer.observe(document.body, { attributes: true, subtree: true, attributeFilter: ['style', 'class'] });
+      })();
+  </script>
 </body>
 
 </html>
